@@ -1,0 +1,300 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apple HIG-inspired Design System */
+
+@layer base {
+  :root {
+    /* Typography - Geist (sans) + Geist Mono (numbers, code) */
+    --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    
+    /* Colors - Light Mode (muted pastel neutrals, warm cream) */
+    --background: 30 20% 97%;
+    --foreground: 240 8% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 8% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 8% 20%;
+    --primary: 250 28% 54%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 18% 94%;
+    --secondary-foreground: 240 8% 20%;
+    --muted: 30 18% 94%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 30 18% 94%;
+    --accent-foreground: 240 8% 20%;
+    --destructive: 5 45% 56%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 12% 90%;
+    --input: 30 12% 90%;
+    --ring: 250 28% 54%;
+
+    /* Chart colors - Cohesive muted pastels */
+    --chart-1: 250 30% 68%;
+    --chart-2: 150 25% 60%;
+    --chart-3: 35 35% 68%;
+    --chart-4: 215 30% 65%;
+    --chart-5: 340 30% 70%;
+    
+    /* Apple-style radius */
+    --radius: 12px;
+    
+    /* Shadows - Layered for depth */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+    --shadow-xl: 0 24px 80px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.08);
+  }
+
+  .dark {
+    /* Deeper base + clearer separation: bg darker, cards/borders lifted, muted
+       text brighter — more depth and legibility than a flat near-black. */
+    --background: 240 10% 7%;
+    --foreground: 30 14% 95%;
+    --card: 240 8% 12%;
+    --card-foreground: 30 14% 95%;
+    --popover: 240 8% 12%;
+    --popover-foreground: 30 14% 95%;
+    --primary: 250 36% 73%;
+    --primary-foreground: 240 20% 10%;
+    --secondary: 240 6% 17%;
+    --secondary-foreground: 30 14% 95%;
+    --muted: 240 6% 16%;
+    --muted-foreground: 30 8% 68%;
+    --accent: 240 6% 20%;
+    --accent-foreground: 30 14% 95%;
+    --destructive: 5 48% 56%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 7% 22%;
+    --input: 240 7% 22%;
+    --ring: 250 36% 73%;
+
+    /* Dark mode shadows — a touch stronger so cards lift off the deeper bg */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-lg: 0 14px 44px rgba(0,0,0,0.55), 0 4px 12px rgba(0,0,0,0.3);
+    --shadow-xl: 0 24px 80px rgba(0,0,0,0.62), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Minimal, theme-aware scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.25) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground) / 0.25);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.4);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+@layer components {
+  .skip-link {
+    @apply fixed left-4 top-4 z-50 -translate-y-24 rounded-md bg-background px-4 py-2 text-sm font-medium shadow-lg ring-2 ring-ring transition-transform;
+  }
+
+  .skip-link:focus {
+    @apply translate-y-0;
+  }
+
+  /* Apple-style glass effect */
+  .glass {
+    @apply bg-card/80 backdrop-blur-xl;
+  }
+
+  /* Apple-style elevated card */
+  .card-elevated {
+    @apply bg-card rounded-xl;
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Apple-style grouped list */
+  .list-grouped {
+    @apply bg-card rounded-xl overflow-hidden divide-y divide-border;
+  }
+
+  /* Smooth transitions - Apple uses 0.3s with ease */
+  .transition-apple {
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  /* Apple-style hover lift */
+  .hover-lift {
+    @apply transition-apple;
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Apple-style pressed state */
+  .press-scale:active {
+    transform: scale(0.98);
+  }
+
+  /* Typography hierarchy - Apple style */
+  .text-headline {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+
+  .text-title {
+    @apply text-lg font-semibold tracking-tight;
+  }
+
+  .text-body {
+    @apply text-base leading-relaxed;
+  }
+
+  .text-caption {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .text-footnote {
+    @apply text-xs text-muted-foreground;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .hover-lift:hover,
+  .press-scale:active {
+    transform: none;
+  }
+}
+
+@layer utilities {
+  /* Apple-style section spacing */
+  .section-gap {
+    @apply py-8 md:py-12;
+  }
+
+  /* Content max-width like Apple */
+  .content-width {
+    @apply max-w-5xl mx-auto px-4 md:px-6;
+  }
+
+  /* Safe area insets for iOS (notch / home indicator).
+     Requires viewport-fit=cover on the viewport meta to resolve to nonzero. */
+  .safe-area-inset {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Top inset only — for the sticky header so nav clears the status bar. */
+  .safe-area-inset-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Bottom inset only — for the docked chat composer so it clears the home indicator. */
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Film-grain / paper-noise overlay (SVG fractal noise as a data URI). Pair with
+     a low opacity + mix-blend-soft-light so it reads as subtle texture in both
+     light and dark themes. Used by the marketing hero backdrop. */
+  .noise-layer {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Slow, gentle drift for the iridescent light-streak. Rotation lives on a static
+     parent so this only translates/scales — no transform conflict. Honors the
+     reduced-motion block above (which clamps animation-duration). */
+  @keyframes streakDrift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(-2.5%, -1.5%, 0) scale(1.04);
+    }
+  }
+  .animate-streak {
+    animation: streakDrift 16s ease-in-out infinite;
+  }
+
+  /* Hero backdrop washes — theme-aware so the warm light-mode bloom doesn't fog
+     the near-black dark theme. Light: warm cream brightening. Dark: a faint cool
+     glow / no tint, letting the iridescent streak carry it on black. */
+  .hero-wash {
+    background: radial-gradient(closest-side, rgba(255, 251, 245, 0.85), rgba(255, 251, 245, 0) 72%);
+    filter: blur(10px);
+  }
+  .dark .hero-wash {
+    background: radial-gradient(closest-side, rgba(214, 222, 245, 0.1), rgba(214, 222, 245, 0) 70%);
+  }
+  /* Dampens the iridescent streak behind the evals runner column so muted
+     section-header text stays readable; the streak still glows through. */
+  .hero-content-scrim {
+    background: linear-gradient(180deg, hsl(0 0% 100% / 0.42), hsl(0 0% 100% / 0.24));
+  }
+  .dark .hero-content-scrim {
+    background: linear-gradient(180deg, hsl(240 10% 7% / 0.66), hsl(240 10% 7% / 0.44));
+  }
+
+  .hero-tint {
+    background: radial-gradient(120% 80% at 14% 32%, rgba(251, 245, 235, 0.75), rgba(251, 245, 235, 0) 55%);
+  }
+  .dark .hero-tint {
+    background: none;
+  }
+
+  /* Soft-light grain lifts dark pixels toward gray, so dial it way back in dark
+     mode where the near-black field must stay near-black. */
+  .hero-grain {
+    opacity: 0.5;
+  }
+  .dark .hero-grain {
+    opacity: 0.16;
+  }
+}

@@ -1,0 +1,52 @@
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code tooling (editor-local; not part of the deliverable)
+.claude/
+
+# Logs
+*.log
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+/playwright-report
+/test-results
+
+# next.js
+/.next/
+/out/
+tsconfig.tsbuildinfo
+
+# production
+/build
+
+# misc
+*.pem
+
+# env files
+.env*
+!.env.example
+
+# security audit notes
+/security/
+
+# vercel
+.vercel
+
+# python venv used by scripts/check_grammar.py
+.venv/
+__pycache__/
+
+# Local eval runbook (run-history analytics)
+tests/runbook/

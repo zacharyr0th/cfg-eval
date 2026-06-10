@@ -1,0 +1,18 @@
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cfg-logo-grad" x1="6" y1="2" x2="26" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8295E3" />
+      <stop offset="1" stop-color="#425DA9" />
+    </linearGradient>
+    <radialGradient id="cfg-logo-shine" cx="0.36" cy="0.34" r="0.5">
+      <stop offset="0" stop-color="white" stop-opacity="0.55" />
+      <stop offset="1" stop-color="white" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect x="3.5" y="3.5" width="25" height="25" rx="8" fill="url(#cfg-logo-grad)" />
+  <rect x="3.5" y="3.5" width="25" height="25" rx="8" fill="url(#cfg-logo-shine)" />
+  <rect x="3.5" y="3.5" width="25" height="25" rx="8" fill="none" stroke="white" stroke-opacity="0.22" stroke-width="0.8" />
+
+  <path d="M11 16.4 14.6 20 21.4 12.8" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
