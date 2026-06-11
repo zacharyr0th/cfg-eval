@@ -227,7 +227,7 @@ export async function generateSQLConstrained(question: string): Promise<NLToSQLR
     // input-token discount and lower TTFT. Bumped to v3: the prefix changed when
     // the grammar gained expression comparisons / NOT predicates and the tool
     // description was updated to match.
-    prompt_cache_key: "nl-to-sql:constrained:v4",
+    prompt_cache_key: "nl-to-sql:constrained:v5",
   });
   const decode = extractConstrainedDecode(res.output);
   if (!decode) {

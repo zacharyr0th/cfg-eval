@@ -110,7 +110,7 @@ Columns (name : type):
   passenger_count    : Nullable(UInt8)
   trip_distance      : Nullable(Float32)    -- miles
   fare_amount        : Float32              -- base fare, USD
-  extra              : Float32              -- surcharges, USD
+  extra              : Float32              -- rush-hour & overnight extras (NOT improvement_surcharge, NOT mta_tax)
   tip_amount         : Float32              -- USD
   tolls_amount       : Float32              -- USD
   total_amount       : Float32              -- fare + extra + tip + tolls, USD
@@ -121,6 +121,10 @@ Columns (name : type):
   dropoff_ntaname    : LowCardinality(String)   -- dropoff neighborhood (NTA)
 
 Lat/long columns exist in the table but the grammar does NOT accept them.
+
+Columns dropped from this subset — do NOT substitute another column if asked about these:
+  improvement_surcharge, mta_tax, VendorID, RatecodeID, store_and_fwd_flag
+Use cannot_answer for any question that specifically asks about one of these fields.
 
 Filtering by payment type uses the enum string codes:
   WHERE payment_type = 'CRE'              -- credit-card trips
