@@ -585,11 +585,9 @@ function headlineStats(bundles: RunBundle[], oos: OosOutcome[]) {
   };
 }
 
-/** Read the answer pass-rate from a runbook entry, tolerating the pre-rename
- *  field (`goldenPassRate`) in old history lines. */
 function readAnswerPassRate(e: RunbookEntry): number | null {
-  const perEval = e.perEval as { answerPassRate?: number; goldenPassRate?: number };
-  return perEval.answerPassRate ?? perEval.goldenPassRate ?? null;
+  const perEval = e.perEval as { answerPassRate?: number };
+  return perEval.answerPassRate ?? null;
 }
 
 /** Share of trials whose SQL references only real columns/functions (1.0 = no

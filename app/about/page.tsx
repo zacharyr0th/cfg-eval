@@ -57,18 +57,9 @@ export default function AboutPage() {
                 How this works
               </h1>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                CFG Eval is{" "}
-                <strong className="font-medium text-foreground">constrained generation</strong>,
-                evaluated — SQL decoded under a context-free grammar (CFG), measured against an
-                unconstrained baseline. This page covers the architecture,
-                grammar, eval methodology, and key decisions — so the numbers on the{" "}
-                <Link
-                  href="/evals"
-                  className="text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
-                >
-                  evals page
-                </Link>{" "}
-                mean something. Every file path links to its source on{" "}
+                SQL decoded under a context-free grammar (CFG), measured against an unconstrained
+                baseline. Architecture, grammar, eval methodology, and key decisions — every file
+                path links to{" "}
                 <a href={REPO_URL} target="_blank" rel="noreferrer" className={externalLinkCls}>
                   GitHub
                   <ExternalLink aria-hidden className="inline h-3 w-3" />
@@ -81,8 +72,8 @@ export default function AboutPage() {
             <div className="mb-8 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3.5 text-sm leading-relaxed text-muted-foreground shadow-[var(--shadow-sm)]">
               <span className="font-semibold text-foreground">TL;DR</span> — GPT-5 decodes against
               a context-free grammar, so the SQL it emits is{" "}
-              <em className="italic">provably</em> valid SELECT-only ClickHouse. Not just prompted
-              to be — structurally enforced at every token. The evals measure what that guarantee
+              <em className="italic">provably</em> valid SELECT-only ClickHouse — structurally
+              enforced at every token, not just prompted. The evals measure what that guarantee
               buys over an unconstrained baseline: a live 20-million-row dataset with a
               deterministic result-set grader instead of an LLM judge.
             </div>
@@ -115,12 +106,10 @@ export default function AboutPage() {
                     <ExternalLink aria-hidden className="inline h-3 w-3" />
                   </a>{" "}
                   — a custom tool whose <code className={codeCls}>format</code> field is a Lark
-                  grammar (Lark is the language the grammar is written in). At every decoding
-                  step, LLGuidance (the constrained-decoding engine OpenAI runs server-side) masks
-                  the logit distribution — in plain terms, it zeroes out the probability of every
-                  next token that would break the grammar — so the model can only emit tokens that
-                  keep the partial output inside the accepted language. The output is{" "}
-                  <em>provably</em> grammar-conformant, not just prompted to be.
+                  grammar. At every decoding step, LLGuidance (OpenAI&apos;s constrained-decoding
+                  engine) masks the logit distribution — zeroing out every token that would violate
+                  the grammar — so the model can only emit tokens that stay inside the accepted
+                  language. The output is <em>provably</em> grammar-conformant.
                 </p>
                 <Callout>
                   <strong>Why &ldquo;context-free&rdquo;?</strong> Decades-old CS theory, not an
@@ -130,23 +119,15 @@ export default function AboutPage() {
                   the engine only needs to track which rules are still open.
                 </Callout>
                 <p>
-                  Does that structural guarantee matter for real analytical queries against a real
-                  database? The dataset is ClickHouse&apos;s public NYC Taxi sample — 20 million
-                  trips, July–September 2015. Every query runs against it live.
+                  The dataset is ClickHouse&apos;s public NYC Taxi sample — 20 million trips,
+                  July–September 2015. Every query runs against it live.
                 </p>
               </Section>
 
               {/* 2 — Pipeline */}
               <Section id="pipeline" eyebrow="Architecture" title="The pipeline">
                 <p>
-                  In plain terms: your question goes to the server, which checks a cache (repeat
-                  questions are answered instantly), asks GPT-5 to write SQL it can only phrase
-                  within the grammar, runs that SQL on the database with time and size limits, and
-                  returns the rows. The technical version of that flow, for engineers:
-                </p>
-                <p>
-                  The route (<Src path="app/api/query/route.ts" />) is thin on purpose — it&apos;s
-                  not the interesting part:
+                  The route (<Src path="app/api/query/route.ts" />) is thin on purpose:
                 </p>
                 <CodeBlock>
                   {`NL question
@@ -262,8 +243,6 @@ export default function AboutPage() {
 
                 <h3 className={h3Cls}>Explicit whitespace threading</h3>
                 <p>
-                  In plain terms: the grammar spells out exactly where spaces are allowed instead
-                  of ignoring them everywhere — that keeps the constrained decoder predictable.
                   The{" "}
                   <a
                     href={COOKBOOK_URL}
@@ -302,13 +281,6 @@ export default function AboutPage() {
                 </p>
 
                 <h3 className={h3Cls}>Earley, not LALR, for the local validator</h3>
-                <p>
-                  In plain terms: there are two common algorithms for checking text against a
-                  grammar, and the faster one (LALR) wrongly rejects some queries this grammar
-                  should accept — so the local validator uses the more thorough one (Earley) to
-                  match what OpenAI&apos;s engine actually allows. The parser-theory detail, for
-                  those who want it:
-                </p>
                 <p>
                   The Python grammar validator (<Src path="scripts/check_grammar.py" />) uses
                   Lark&apos;s Earley parser, not LALR. Explicit whitespace threading creates LALR-1
@@ -640,25 +612,19 @@ export default function AboutPage() {
               {/* 7 — What's missing */}
               <Section id="future" eyebrow="Honest gaps" title="What&apos;s still missing">
                 <DefList>
-                  <DefItem term="A prompt-injection adversarial set">
-                    The set covers grounding and abstention. The remaining frontier is{" "}
-                    <em>security</em>: a table-driven set of{" "}
+                  <DefItem term="Prompt-injection adversarial set">
                     <code className={codeCls}>DROP TABLE</code>,{" "}
-                    <code className={codeCls}>;--</code>, system-impersonation, and role-spoofing
-                    prompts would demonstrate what the grammar forecloses that prompting
-                    can&apos;t.
+                    <code className={codeCls}>;--</code>, role-spoofing prompts — a table-driven
+                    set would measure what the grammar forecloses vs prompting alone.
                   </DefItem>
                   <DefItem term="Multi-table support">
-                    The grammar pins to one table. Joins and CTEs require a much larger grammar —
-                    and the cookbook flags &ldquo;too complex&rdquo; as a genuine LLGuidance
-                    failure mode.
+                    The grammar pins to one table. The cookbook flags joins and CTEs as a genuine
+                    LLGuidance failure mode.
                   </DefItem>
-                  <DefItem term="Automated regression tracking">
-                    Each full CLI run snapshots its metrics — including the headline slice verdict
-                    — to a local runbook (<Src path="tests/runbook.ts" />) and logs deltas vs the
-                    previous run, but it still has to be run by hand and the in-app runner&apos;s
-                    results live in page state. A CI cron running the suite per model tier would
-                    catch silent regressions automatically.
+                  <DefItem term="CI eval cron">
+                    CLI runs snapshot metrics to a local runbook (<Src path="tests/runbook.ts" />)
+                    and log deltas vs the prior run, but still require a manual trigger. A scheduled
+                    run per model tier would catch silent regressions automatically.
                   </DefItem>
                   <DefItem term="Auth + durable rate limiting">
                     <Src path="app/api/query/route.ts" label="/api/query" /> has an in-process

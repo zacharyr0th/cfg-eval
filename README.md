@@ -63,7 +63,7 @@ RUN_EVALS=1 EVAL_N=5 bun run test              # 5 trials per case
 RUN_EVALS=1 EVAL_SLICE=headline bun run test   # discriminating slice only (cheap headline run)
 ```
 
-The full set splits into a **control arm** (clean prompts — both modes score ~100%, proving the grammar costs nothing) and a **discriminating slice** (3 adversarial + 5 phantom-column prompts built to make the baseline fail). The `HEADLINE` suite prints that slice as one table — baseline drifts off schema / answers unanswerable questions, constrained stays clean / declines — and asserts the constrained side is clean. `EVAL_SLICE=headline` runs just those 8 prompts when you only want the proof.
+The full set splits into a **control arm** (clean prompts — both modes score ~100%) and a **discriminating slice** (3 adversarial + 5 phantom-column prompts built to break the baseline). The `HEADLINE` suite prints that slice as one table and asserts the constrained side is clean. `EVAL_SLICE=headline` runs just those 8 prompts.
 
 | # | Eval | What it asserts |
 | --- | --- | --- |
@@ -74,7 +74,7 @@ The full set splits into a **control arm** (clean prompts — both modes score ~
 | 5 | **CFG vs no-CFG head-to-head** | Per-case + overall + adversarial-slice tables, each with a `schemaClean` column. Hard assertion: constrained `execRate == 1.0`. |
 | ★ | **HEADLINE** | The discriminating slice in one table: on the 8 prompts built to break the baseline, `baselineFailed` vs `cfgFailed` (asserted 0). Persisted per run in the runbook. |
 
-Cases live in [`tests/eval-cases.ts`](tests/eval-cases.ts) and [`tests/out-of-scope-cases.ts`](tests/out-of-scope-cases.ts). The SQL introspection behind eval 3 ([`tests/sql-introspect.ts`](tests/sql-introspect.ts)) has its own offline unit tests. False-positive hardening (`VERIFY_CASES=1 bun run test`) checks that each case's distractor SQL differs from the reference answer — so a coincidentally-correct query can't pass.
+Cases live in [`tests/eval-cases.ts`](tests/eval-cases.ts) and [`tests/out-of-scope-cases.ts`](tests/out-of-scope-cases.ts). The SQL introspection behind eval 3 ([`tests/sql-introspect.ts`](tests/sql-introspect.ts)) has offline unit tests. `VERIFY_CASES=1 bun run test` asserts each case's distractor SQL differs from the reference answer — so a coincidentally-correct query can't pass.
 
 The adversarial slice design and grading methodology are explained in the [long-form writeup](https://cfg-eval.vercel.app/about).
 
@@ -122,11 +122,11 @@ Notable design choices:
 
 ## What I'd add before production
 
-- **Prompt-injection adversarial set** — `DROP TABLE`, `;--`, role-spoofing prompts to demonstrate the grammar's structural safety more directly.
-- **Multi-table support** — the grammar pins to one table; real analytics needs joins/CTEs (the cookbook flags "too complex" as a real LLGuidance failure mode).
+- **Prompt-injection adversarial set** — `DROP TABLE`, `;--`, role-spoofing prompts to measure what the grammar forecloses vs prompting alone.
+- **Multi-table support** — the grammar pins to one table; the cookbook flags joins/CTEs as a genuine LLGuidance failure mode.
 - **Historical traces in-app** — the Trace sidebar shows the current request; past traces live only in the external dashboard.
-- **Auth + durable rate limiting** — the in-process limiter ([`lib/rate-limit.ts`](lib/rate-limit.ts)) resets on restart; production needs auth and a shared store.
-- **Persistent eval results + regression alerts** — a CI cron storing metrics per model tier would catch silent regressions.
+- **Auth + durable rate limiting** — the in-process limiter ([`lib/rate-limit.ts`](lib/rate-limit.ts)) resets on restart; production needs a shared store.
+- **CI eval cron** — a scheduled run per model tier would catch silent regressions automatically.
 
 ---
 

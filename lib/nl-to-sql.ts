@@ -21,12 +21,12 @@ import { NYC_TAXI_LARK, NYC_TAXI_SCHEMA_DESCRIPTION } from "@/lib/grammar/taxi";
  *     grammar was forced to manufacture.
  *   - `generateSQLUnconstrained` — same model, same system prompt, NO grammar
  *     and no abstain tool. The model emits SQL as plain text. Used only as the
- *     head-to-head baseline in eval #3 ("what does CFG actually buy us?").
+ *     head-to-head baseline in eval 5 ("what does CFG actually buy us?").
  *
  * Both paths share the same `SYSTEM_PROMPT`; the constrained path adds a short
  * tool-usage suffix and the abstain tool. For answerable prompts the manipulated
  * variable is still just the grammar constraint — the abstain tool only changes
- * behaviour on the out-of-scope set (eval #5).
+ * behaviour on the out-of-scope set (eval 4).
  */
 
 const TOOL_NAME = "execute_sql";
@@ -78,7 +78,7 @@ Aim for the minimal query that answers the question. If the question references 
 
 /**
  * Appended to SYSTEM_PROMPT for the constrained path ONLY. The shared prompt
- * stays byte-identical across both modes so the head-to-head (eval #7) still
+ * stays byte-identical across both modes so the head-to-head (eval 5) still
  * isolates the grammar as the manipulated variable for *answerable* questions;
  * this suffix only explains the two tools the constrained model has and the
  * unconstrained one doesn't.

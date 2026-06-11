@@ -176,14 +176,14 @@ export default function EvalsPage() {
                 model&apos;s decoding is constrained so it can only emit SQL this schema allows. Every
                 prompt runs twice — with the grammar (CFG) and without (no CFG). {EVAL_CASES.length}{" "}
                 answerable prompts + {OUT_OF_SCOPE_CASES.length} out-of-scope prompts, each in both
-                modes, = {ALL_SPECS.length} trials. New to the vocabulary? The{" "}
+                modes, = {ALL_SPECS.length} trials. See the{" "}
                 <Link
                   href="/about"
                   className="font-medium text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
                 >
                   About page
                 </Link>{" "}
-                defines every term and explains how the grading works.
+                for full methodology.
               </p>
               {/* The headline verdict, surfaced where the eye lands first. Hidden
                   below xl, where the inline Scoreboard (with the same banner)

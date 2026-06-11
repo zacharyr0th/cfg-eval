@@ -163,7 +163,10 @@ const SCRIPT = `${ROOT}/scripts/check_grammar.py`;
 const PYTHON_AVAILABLE = existsSync(PYTHON);
 
 export function parsesGrammar(sql: string): boolean {
-  if (!PYTHON_AVAILABLE) return true; // skip silently if python venv isn't there
+  if (!PYTHON_AVAILABLE) {
+    console.warn("parsesGrammar: .venv not found — grammar check skipped, returning true");
+    return true;
+  }
   try {
     const out = execFileSync(PYTHON, [SCRIPT, "-"], { input: sql, encoding: "utf8" });
     return out.startsWith("OK:");
